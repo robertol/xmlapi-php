@@ -2409,6 +2409,31 @@ class xmlapi
 
         return $this->api2_query($username, 'Ftp', 'listftp');
     }
+    
+    // This API2 function create ftp-users associated with a cPanel account.
+    public function createftpaccount($username, $ftp_username, $ftp_password, $ftp_quota = 10, $ftp_homedir = '') {
+		if (!isset($username)) {
+			error_log("addftp requires that user is passed to it");
+			return false;
+		}
+		if(empty($ftp_username)){
+			error_log("addftp requires that ftp_username is passed to it");
+			return false;
+		}
+		if (!isset($ftp_password)) {
+			error_log("addftp requires that ftp_password is passed to it");
+			return false;
+		}
+
+		$args = array(
+			'user'  =>  $ftp_username,
+			'pass'  =>  $ftp_password,
+			'quota' => !empty($ftp_quota) ? $ftp_quota : 10,
+			'homedir' => !empty($ftp_homedir) ? $ftp_homedir : $ftp_username
+		);
+
+		return $this->api2_query($username, 'Ftp', 'addftp', $args);
+	}
 
     // This API function displays a list of all parked domains for a specific user.
     public function listparkeddomains($username, $domain = null)
